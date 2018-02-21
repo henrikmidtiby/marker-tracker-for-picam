@@ -3,6 +3,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 import cv2
+import MarkerTracker
 
 # Initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -12,6 +13,8 @@ rawCapture = PiRGBArray(camera, size=(640, 480))
 
 # Allot the camera to warmup
 time.sleep(0.1)
+
+tracker = MarkerTracker.MarkerTracker(4, 20, 1)
 
 # Capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
