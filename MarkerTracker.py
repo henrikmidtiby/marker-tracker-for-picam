@@ -97,8 +97,8 @@ class MarkerTracker:
                     max_value = intensity
                     max_orientation = orient
             except Exception as e:
-                print("determineMarkerOrientation: error: %d %d %d %d" % (ym2, xm2, frame.shape[1], frame.shape[0]))
-                print(e)
+                #print("determineMarkerOrientation: error: %d %d %d %d" % (ym2, xm2, frame.shape[1], frame.shape[0]))
+                #print(e)
                 pass
 
         self.orientation = self.limit_angle_to_range(max_orientation)
@@ -127,8 +127,8 @@ class MarkerTracker:
             temp_value_for_quality = 1 - 1/(1 + math.exp(0.75*(-7+normalised_mean_difference)))
             self.quality = temp_value_for_quality
         except Exception as e:
-            print("error")
-            print(e)
+            #print("error when calculating marker quality")
+            #print(e)
             self.quality = 0.0
             return
 
