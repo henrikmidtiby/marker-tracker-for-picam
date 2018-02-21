@@ -15,7 +15,7 @@ def annotate_frame_with_detected_marker(frame, marker_pose, order_of_marker_inpu
     else:
         marker_color = (255, 0, 255)
     cv2.circle(frame, (marker_pose.x, marker_pose.y), int(size_of_kernel_input / 2), marker_color, line_width_of_circle)
-    dist = 50
+    dist = 2*size_of_kernel_input
     direction_line_width = 1
     if track_orientation:
         # Mark the orientation of the detected marker
@@ -67,7 +67,7 @@ def main():
         cv2.imshow("Frame", image)
         key = cv2.waitKey(1) & 0xFF
 
-        # clear the stream in preparation for the nect frame
+        # clear the stream in preparation for the next frame
         rawCapture.truncate(0)
 
         # if the 'q' key was pressed, break from the loop
