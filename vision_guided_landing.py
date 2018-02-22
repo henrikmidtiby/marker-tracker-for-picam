@@ -6,6 +6,15 @@ import cv2
 import MarkerTracker
 import math
 
+MAX_FRAME_RATE = 10
+
+RESOLUTION = (640, 480)
+RESOLUTION = (320, 240)
+#RESOLUTION = (160, 120)
+#RESOLUTION = (80, 60)
+
+KERNEL_ORDER = 6
+KERNEL_SIZE = 19
 
 def annotate_frame_with_detected_marker(frame, marker_pose, order_of_marker_input, size_of_kernel_input,
                                         track_orientation):
@@ -34,21 +43,24 @@ def annotate_frame_with_detected_marker(frame, marker_pose, order_of_marker_inpu
 
             cv2.line(frame, point1, point2, marker_color, direction_line_width)
 
+def show_frame_with_annotations(image, pose):
+    annotate_frame_with_detected_marker(image, pose, KERNEL_ORDER, KERNEL_SIZE, False)
+    cv2.imshow("Frame", image)
+    key = cv2.waitKey(1) & 0xFF
+    return key == ord('q')
+
+
 def main():
     # Initialize the camera and grab a reference to the raw camera capture
     camera = PiCamera()
-    resolution = (640, 480)
-    resolution = (320, 240)
-    resolution = (160, 120)
-    #resolution = (80, 60)
-    camera.resolution = resolution
-    camera.framerate = 10
-    rawCapture = PiRGBArray(camera, size=resolution)
+    camera.resolution = RESOLUTION
+    camera.framerate = MAX_FRAME_RATE
+    rawCapture = PiRGBArray(camera, size=RESOLUTION)
 
     # Allot the camera to warmup
     time.sleep(0.1)
 
-    tracker = MarkerTracker.MarkerTracker(4, 15, 1)
+    tracker = MarkerTracker.MarkerTracker(KERNEL_ORDER, KERNEL_SIZE, 1)
     tracker.track_marker_with_missing_black_leg = False
 
     # Capture frames from the camera
@@ -62,16 +74,11 @@ def main():
         timestring = time.strftime("%H:%M:%S", time.gmtime())
         print("%s %4d %4d %6.2f %6.3f" % (timestring, pose.x, pose.y, pose.theta, pose.quality))
 
-	annotate_frame_with_detected_marker(image, pose, 4, 20, False)
-        # show the fram
-        cv2.imshow("Frame", image)
-        key = cv2.waitKey(1) & 0xFF
-
         # clear the stream in preparation for the next frame
         rawCapture.truncate(0)
 
         # if the 'q' key was pressed, break from the loop
-        if key == ord('q'):
+        if show_frame_with_annotations(image, pose):
             break
 
 main()
