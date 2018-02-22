@@ -130,7 +130,7 @@ class MarkerTracker:
             #print("error when calculating marker quality")
             #print(e)
             self.quality = 0.0
-            return
+        return
 
     def extract_window_around_maker_location(self, frame):
         (xm, ym) = self.last_marker_location
